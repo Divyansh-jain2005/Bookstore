@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Ink & Anchor</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .display { font-family: 'Cormorant Garamond', serif; }
+    </style>
+</head>
+<body class="bg-[#F3EBDD] text-[#2C2725]">
+    <%- include('includes/nav.ejs') %>
+
+    <section class="pt-20 pb-12 px-6 text-center">
+        <p class="text-[#96584E] uppercase tracking-[0.35em] text-xs font-semibold mb-4">Explore the collection</p>
+        <h1 class="display text-6xl md:text-7xl text-[#2C2725] mb-5">Browse by Category</h1>
+        <div class="flex items-center justify-center gap-4 mb-6">
+            <span class="w-20 h-px bg-[#8C6046]/50"></span><span class="text-[#8C6046] text-lg">✦</span><span class="w-20 h-px bg-[#8C6046]/50"></span>
+        </div>
+    </section>
+
+    <section class="px-6 pb-16">
+        <div class="max-w-5xl mx-auto bg-[#E8DDC8]/70 border border-[#8C6046]/30 px-5 py-4 shadow-sm rounded-xl">
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <a href="/categories" class="px-5 py-2.5 text-xs uppercase tracking-widest <%= selectedCategory === 'All Books' ? 'text-[#F1EACC] bg-[#2C2725]' : 'text-[#2C2725] border border-[#8C6046]/30' %> hover:bg-[#96584E] hover:text-[#F1EACC] transition duration-300">All Books</a>
+                <% categories.forEach(category => { %>
+                    <a href="/categories/<%= encodeURIComponent(category) %>" class="px-5 py-2.5 text-xs uppercase tracking-widest <%= selectedCategory === category ? 'text-[#F1EACC] bg-[#2C2725]' : 'text-[#2C2725] border border-[#8C6046]/30' %> hover:bg-[#789165] hover:text-[#F1EACC] transition duration-300"><%= category %></a>
+                <% }) %>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-6 pb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if (!books || books.length === 0) { %>
+            <div class="col-span-full rounded-2xl border border-dashed border-[#8C6046]/50 bg-[#F3EBDD] p-10 text-center text-[#3A2922]">
+                <p class="display text-3xl">No books in this category yet.</p>
+            </div>
+        <% } else { %>
+            <% books.forEach((item) => { %>
+                <div class="bg-[#FFFCF5] border border-[#B08D57]/30 shadow-md p-7 rounded-xl flex flex-col justify-between transition duration-300 transform hover:-translate-y-2 hover:shadow-2xl hover:border-[#6B2737]/40 group">
+                    <div>
+                        <div class="h-2 bg-[#6B2737] -mt-7 -mx-7 mb-6 rounded-t-xl transition duration-300 group-hover:bg-[#3A2922]"></div>
+                        
+                        <div class="overflow-hidden rounded-lg mb-4 bg-[#E8DDC8]">
+                            <% if (item.image) { %>
+                                <img src="<%= item.image %>" alt="<%= item.title %>" class="h-72 w-full object-cover transition duration-500 group-hover:scale-105">
+                            <% } else { %>
+                                <div class="h-64 flex items-center justify-center bg-[#3A2922] text-[#F3EBDD] text-2xl display">No Image</div>
+                            <% } %>
+                        </div>
+
+                        <p class="text-[#B08D57] text-xs uppercase tracking-widest mb-2"><%= item.category %></p>
+                        <h2 class="display text-2xl font-semibold text-[#3A2922] mb-4 min-h-[3.5rem] line-clamp-2 transition duration-300 group-hover:text-[#6B2737]"><%= item.title %></h2>
+                        
+                        <div class="space-y-1.5 text-sm text-[#3A2922]/80 border-t border-[#B08D57]/20 pt-4">
+                            <p><span class="text-[#294536] font-semibold">Author:</span> <%= item.author %></p>
+                            <p><span class="text-[#294536] font-semibold">Asset Value:</span> <span class="text-base font-bold text-[#6B2737]">₹<%= item.price %></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Client-Side Real-Time Cart Dispatch Interceptor Action -->
+                    <div class="mt-6 flex flex-col gap-2">
+                        <button type="button" class="add-to-cart-button w-full text-center bg-[#6B2737] hover:bg-[#3A2922] text-[#F3EBDD] py-3 text-xs font-bold uppercase tracking-wider transition duration-300 rounded-lg cursor-pointer shadow-md hover:shadow-lg" data-book-id="<%= item._id %>" data-book-title="<%= item.title %>" data-book-price="<%= item.price %>" data-book-image="<%= item.image || '' %>">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </main>
+
+    <%- include('includes/footer.ejs') %>
+</body>
+</html>

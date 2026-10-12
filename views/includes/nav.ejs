@@ -1,0 +1,188 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<nav class="sticky top-0 z-50 bg-[#2C2725]/95 backdrop-blur-md border-b border-[#B08D57]/20 px-6 py-4 transition-all duration-300">
+    <div class="mx-auto flex max-w-6xl items-center justify-between">
+        
+        <a href="/" class="group flex items-center gap-2">
+            <span class="text-[#D4B77A] text-xl transition group-hover:scale-110 duration-300">❦</span>
+            <span class="display text-2xl font-medium tracking-wide text-[#F3EBDD] group-hover:text-[#D4B77A] transition duration-300">
+                Ink & Anchor
+            </span>
+        </a>
+
+        <!-- Desktop Navigation Matrix -->
+        <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.25em]">
+            <a href="/" class="text-[#F3EBDD] hover:text-[#D4B77A] transition-colors duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#D4B77A] after:transition-all after:duration-300 hover:after:w-full">Home</a>
+            <a href="/categories" class="text-[#F3EBDD] hover:text-[#D4B77A] transition-colors duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#D4B77A] after:transition-all after:duration-300 hover:after:w-full">Categories</a>
+            <a href="/books" class="text-[#F3EBDD] hover:text-[#D4B77A] transition-colors duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#D4B77A] after:transition-all after:duration-300 hover:after:w-full">Books</a>
+            <a href="/about" class="text-[#F3EBDD] hover:text-[#D4B77A] transition-colors duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#D4B77A] after:transition-all after:duration-300 hover:after:w-full">About</a>
+            <a href="/contact" class="text-[#F3EBDD] hover:text-[#D4B77A] transition-colors duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-[#D4B77A] after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+        </div>
+
+        <!-- Action Hub Container -->
+        <div class="flex items-center gap-2">
+            <% if (isAdmin) { %>
+                <a href="/books/new" class="px-2 py-2 text-[10px] font-semibold uppercase tracking-wider text-[#F3EBDD] hover:text-[#D4B77A] transition duration-300">New Book</a>
+                <a href="/books" class="px-2 py-2 text-[10px] font-semibold uppercase tracking-wider text-[#F3EBDD] hover:text-[#D4B77A] transition duration-300">Edit Books</a>
+                <form action="/admin/logout" method="post">
+                    <button type="submit" class="px-2 py-2 text-[10px] font-semibold uppercase tracking-wider text-[#F3EBDD] hover:text-[#D4B77A] transition duration-300">Log out</button>
+                </form>
+            <% } else { %>
+                <a href="/admin/login" aria-label="Admin login" title="Admin login" class="flex items-center justify-center p-2 text-[#F3EBDD] hover:text-[#D4B77A] transition duration-300">
+                    <i class="fa-solid fa-user-lock text-lg" aria-hidden="true"></i>
+                </a>
+            <% } %>
+            <!-- Dynamic Cart Trigger Button with White Font Awesome Icon -->
+            <button onclick="toggleCartDrawer()" class="relative flex items-center justify-center p-2 text-[#F3EBDD] hover:text-[#D4B77A] transition duration-300 focus:outline-none cursor-pointer group/cart">
+                <i class="fa-solid fa-cart-shopping text-lg transition-colors duration-300 group-hover/cart:text-[#D4B77A]" style="color: #FFFFFF !important;"></i>
+                <span id="cart-badge" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#6B2737] text-[9px] font-bold text-white opacity-0 transition-opacity duration-300">0</span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Interactive Cart Side-Drawer Panel Overlay UI -->
+<div id="cart-drawer" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+    <div class="absolute right-0 top-0 h-full w-full max-w-md bg-[#FFFCF5] p-6 shadow-2xl flex flex-col justify-between border-l border-[#B08D57]/30 transform translate-x-full transition-transform duration-300 ease-out" id="cart-drawer-panel">
+        <div>
+            <div class="flex items-center justify-between border-b border-[#B08D57]/20 pb-4">
+                <h3 class="display text-2xl font-semibold text-[#3A2922]">Selected Items</h3>
+                <button onclick="toggleCartDrawer()" class="text-sm font-bold uppercase tracking-wider text-[#3A2922]/60 hover:text-[#6B2737] cursor-pointer">✕ Close</button>
+            </div>
+            <!-- Dynamic Injection Container Node -->
+            <div id="cart-items-container" class="mt-6 space-y-4 overflow-y-auto max-h-[60vh] pr-2">
+                <p class="text-sm text-[#3A2922]/50 italic text-center py-8">Your cart is currently empty.</p>
+            </div>
+        </div>
+
+        <div class="border-t border-[#B08D57]/20 pt-4">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs uppercase tracking-wider text-[#3A2922]/60 font-semibold">Aggregate Total</span>
+                <span id="cart-total-price" class="text-xl font-bold text-[#6B2737]">₹0</span>
+            </div>
+            <button onclick="executeCartCheckout()" class="w-full text-center bg-[#294536] hover:bg-[#3A2922] text-[#F3EBDD] py-3 text-xs font-bold uppercase tracking-widest transition duration-300 rounded-xl shadow-md">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Core Shared Global Client-Side Cart Controller Script Engine -->
+<script>
+    function getCart() {
+        return JSON.parse(localStorage.getItem('ink_anchor_cart')) || [];
+    }
+    function handleAddToCart(id, title, price, image) {
+        const cart = getCart();
+        const existingItem = cart.find(item => item.id === id);
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ id, title, price, image, quantity: 1 });
+        }
+
+        localStorage.setItem('ink_anchor_cart', JSON.stringify(cart));
+        updateCartBadge();
+        alert('✦ "' + title + '" Book is Successfully Added to Cart!');
+    }
+    function updateCartBadge() {
+        const cart = getCart();
+        const badge = document.getElementById('cart-badge');
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        if(count > 0) {
+            badge.innerText = count;
+            badge.classList.remove('opacity-0');
+        } else {
+            badge.classList.add('opacity-0');
+        }
+    }
+    function toggleCartDrawer() {
+        const drawer = document.getElementById('cart-drawer');
+        const panel = document.getElementById('cart-drawer-panel');
+        if(drawer.classList.contains('hidden')) {
+            drawer.classList.remove('hidden');
+            setTimeout(() => {
+                drawer.classList.remove('opacity-0');
+                panel.classList.remove('translate-x-full');
+            }, 10);
+            renderCartItems();
+        } else {
+            drawer.classList.add('opacity-0');
+            panel.classList.add('translate-x-full');
+            setTimeout(() => drawer.classList.add('hidden'), 300);
+        }
+    }
+    function renderCartItems() {
+        const cart = getCart();
+        const container = document.getElementById('cart-items-container');
+        const totalDisplay = document.getElementById('cart-total-price');
+        if (cart.length === 0) {
+            container.innerHTML = '<p class="text-sm text-[#3A2922]/50 italic text-center py-8">Your cart is currently empty.</p>';
+            totalDisplay.innerText = '₹0';
+            return;
+        }
+        let html = '';
+        let total = 0;
+        cart.forEach((item, index) => {
+            total += item.price * item.quantity;
+            html += `
+                <div class="flex items-center justify-between bg-[#E8DDC8]/40 border border-[#B08D57]/20 p-3 rounded-xl gap-3">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.image || ''}" class="w-12 h-16 object-cover rounded bg-[#E8DDC8]" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://w3.org\' width=\'50\' height=\'70\'><rect width=\'100%\' height=\'100%\' fill=\'%233A2922\'/></svg>'">
+                        <div>
+                            <h4 class="display text-sm font-semibold text-[#3A2922] line-clamp-1">${item.title}</h4>
+                            <p class="text-[11px] text-[#294536] font-medium">₹${item.price} each</p>
+                            <div class="mt-2 flex items-center gap-2">
+                                <button type="button" onclick="changeCartQuantity(${index}, -1)" aria-label="Decrease ${item.title} quantity" class="flex h-7 w-7 items-center justify-center rounded border border-[#B08D57]/40 text-[#3A2922] hover:bg-[#E8DDC8]">−</button>
+                                <span class="min-w-5 text-center text-xs font-semibold" aria-live="polite">${item.quantity}</span>
+                                <button type="button" onclick="changeCartQuantity(${index}, 1)" aria-label="Increase ${item.title} quantity" class="flex h-7 w-7 items-center justify-center rounded border border-[#B08D57]/40 text-[#3A2922] hover:bg-[#E8DDC8]">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="removeFromCart(${index})" class="text-xs text-[#6B2737] hover:underline font-medium cursor-pointer">Remove</button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        totalDisplay.innerText = '₹' + total;
+    }
+    function removeFromCart(index) {
+        let cart = getCart();
+        cart.splice(index, 1);
+        localStorage.setItem('ink_anchor_cart', JSON.stringify(cart));
+        updateCartBadge();
+        renderCartItems();
+    }
+    function changeCartQuantity(index, amount) {
+        const cart = getCart();
+        if (!cart[index]) return;
+
+        cart[index].quantity = Math.max(1, Number(cart[index].quantity) + amount);
+        localStorage.setItem('ink_anchor_cart', JSON.stringify(cart));
+        updateCartBadge();
+        renderCartItems();
+    }
+    function executeCartCheckout() {
+        const cart = getCart();
+        if(cart.length === 0) return alert('Your cart is empty.');
+        alert('Your order was placed successfully!');
+        localStorage.removeItem('ink_anchor_cart');
+        updateCartBadge();
+        toggleCartDrawer();
+    }
+    document.addEventListener('click', event => {
+        const button = event.target.closest('.add-to-cart-button');
+        if (!button) return;
+
+        handleAddToCart(
+            button.dataset.bookId,
+            button.dataset.bookTitle,
+            Number(button.dataset.bookPrice),
+            button.dataset.bookImage
+        );
+    });
+    document.addEventListener('DOMContentLoaded', updateCartBadge);
+</script>

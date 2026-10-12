@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books - Ink & Anchor</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .display { font-family: 'Cormorant Garamond', serif; }
+        .book-card { transition: transform .25s ease, box-shadow .25s ease; }
+        .book-card:hover { transform: translateY(-6px); box-shadow: 0 22px 45px #3A29221a; }
+    </style>
+</head>
+<body class="bg-[#F3EBDD] text-[#2C2725]">
+    <%- include('includes/nav.ejs') %>
+
+    <main class="px-5 pb-20 pt-12 md:px-8 md:pt-16">
+        <div class="mx-auto max-w-7xl">
+            <header class="mx-auto mb-12 max-w-3xl text-center">
+                <span class="inline-flex items-center gap-3 rounded-full border border-[#B08D57]/50 bg-white/40 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#6B2737]"><span>✦</span> The collection <span>✦</span></span>
+                <h1 class="display mt-6 text-6xl font-semibold leading-none text-[#3A2922] md:text-8xl">Stories worth <span class="italic text-[#6B2737]">keeping.</span></h1>
+                <p class="mx-auto mt-5 max-w-xl text-sm leading-7 text-[#3A2922]/65 md:text-base">Explore a handpicked world of ideas, adventures, and unforgettable characters. Your next favourite read is waiting.</p>
+                <div class="mx-auto mt-7 flex items-center justify-center gap-3"><span class="h-px w-16 bg-[#B08D57]"></span><span class="text-[#B08D57]">✦</span><span class="h-px w-16 bg-[#B08D57]"></span></div>
+            </header>
+
+            <div class="mb-7 flex items-center justify-between border-b border-[#B08D57]/35 pb-4">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-[#3A2922]/60">The Ink & Anchor bookshelf</p>
+                <span class="text-xs text-[#3A2922]/50">Curated for curious minds</span>
+            </div>
+
+            <% if (books.length === 0) { %>
+                <div class="rounded-2xl border border-dashed border-[#B08D57]/60 bg-white/35 px-6 py-16 text-center">
+                    <div class="text-4xl text-[#B08D57]">✧</div>
+                    <h2 class="display mt-4 text-3xl text-[#3A2922]">A new chapter begins soon</h2>
+                    <p class="mt-2 text-sm text-[#3A2922]/60">There are no books in the collection yet.</p>
+                </div>
+            <% } else { %>
+                <section class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <% books.forEach(book => { %>
+                        <article class="book-card group overflow-hidden rounded-2xl border border-[#B08D57]/35 bg-[#FFFCF5] shadow-md shadow-[#3A2922]/5">
+                            <div class="relative overflow-hidden bg-[#E8DDC8]">
+                                <% if (book.image) { %>
+                                    <img src="<%= book.image %>" alt="<%= book.title %>" loading="lazy" class="h-72 w-full object-cover transition duration-500 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <% } %>
+                                <div style="<%= book.image ? 'display:none' : 'display:flex' %>" class="h-72 w-full flex-col items-center justify-center bg-gradient-to-br from-[#294536] to-[#3A2922] px-5 text-center text-[#F3EBDD]">
+                                    <span class="text-4xl text-[#D4B77A]">❦</span><span class="display mt-4 text-2xl"><%= book.title %></span><span class="mt-2 text-[10px] uppercase tracking-[0.25em] text-[#D4B77A]">Ink & Anchor edition</span>
+                                </div>
+                                <div class="absolute left-4 top-4 rounded-full bg-[#F3EBDD]/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B2737] shadow-sm"><%= book.category %></div>
+                            </div>
+
+                            <div class="p-6">
+                                <h2 class="display min-h-[3.5rem] text-3xl font-semibold leading-tight text-[#3A2922]"><%= book.title %></h2>
+                                <p class="mt-2 text-sm text-[#3A2922]/65">by <span class="font-semibold text-[#294536]"><%= book.author %></span></p>
+                                <div class="mt-5 flex items-center justify-between border-t border-[#B08D57]/30 pt-4">
+                                    <div><p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#3A2922]/45">Price</p><p class="mt-1 text-xl font-bold text-[#6B2737]">₹<%= book.price %></p></div>
+                                    <span class="rounded-full bg-[#789165]/15 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#294536]">Available</span>
+                                </div>
+                                <button type="button" class="add-to-cart-button mt-4 w-full rounded-lg bg-[#6B2737] px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#F3EBDD] transition hover:bg-[#3A2922]" data-book-id="<%= book._id %>" data-book-title="<%= book.title %>" data-book-price="<%= book.price %>" data-book-image="<%= book.image || '' %>">
+                                    Add to Cart
+                                </button>
+                                <% if (isAdmin) { %>
+                                    <a href="/books/edit/<%= book._id %>" class="mt-4 block rounded-lg bg-[#294536] px-4 py-3 text-center text-xs font-bold uppercase tracking-wider text-[#F3EBDD] transition hover:bg-[#3A2922]">Edit Book</a>
+                                <% } %>
+                            </div>
+                        </article>
+                    <% }) %>
+                </section>
+            <% } %>
+        </div>
+    </main>
+
+    <%- include('includes/footer.ejs') %>
+</body>
+</html>

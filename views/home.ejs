@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ink & Anchor - Book Store</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .display { font-family: 'Cormorant Garamond', serif; }
+        @keyframes book-float {
+            0%, 100% { transform: translateY(0) rotate(var(--book-rotation)); }
+            50% { transform: translateY(-12px) rotate(var(--book-rotation)); }
+        }
+        @keyframes sparkle-pulse {
+            0%, 100% { opacity: .45; transform: scale(.8); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+        .floating-book { animation: book-float 4s ease-in-out infinite; }
+        .reading-sparkle { animation: sparkle-pulse 2.4s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+            .floating-book, .reading-sparkle { animation: none; }
+        }
+    </style>
+</head>
+<body class="bg-[#F3EBDD] text-[#2C2725] min-h-screen flex flex-col justify-between">
+    <div>
+        <%- include('includes/nav.ejs') %>
+
+        <!-- Hero Section Grid System -->
+        <section class="max-w-6xl mx-auto px-6 py-12 md:py-20 relative overflow-hidden">
+            <div class="absolute -top-24 -right-20 h-96 w-96 rounded-full bg-[#789165]/10 blur-3xl pointer-events-none"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Side: Content Area Layout Node -->
+                <div class="lg:col-span-7 order-1 text-center lg:text-left">
+                    <p class="text-[#6B2737] uppercase tracking-[0.35em] text-xs font-semibold mb-4">✦ Welcome to Ink & Anchor ✦</p>
+                    <h1 class="display text-5xl md:text-7xl text-[#3A2922] leading-tight font-medium">Discover Your<br><span class="italic text-[#6B2737]">Next Great Book</span></h1>
+                    <p class="text-[#3A2922]/70 text-sm md:text-base mt-6 max-w-xl mx-auto lg:mx-0 leading-8"><i>A handpicked sanctuary where fine design meets timeless literature.
+A quiet harbor for curious minds to escape the noise and get lost in unforgettable stories.</i></p>
+
+                    <!-- Call To Action Actions Control -->
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-4 mt-8">
+                        <a href="/categories" class="bg-[#6B2737] hover:bg-[#3A2922] text-[#F3EBDD] px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] transition duration-300 rounded-xl shadow-md hover:shadow-xl shadow-[#6B2737]/10">
+                            Explore Categories
+                        </a>
+                        <a href="/books" class="border border-[#B08D57] text-[#3A2922] px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] bg-white/30 hover:bg-[#B08D57] hover:text-[#F3EBDD] transition duration-300 rounded-xl">
+                            All Books
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Side: Bookshelf Illustration Matrix -->
+                <div class="lg:col-span-5 order-2 flex justify-center">
+                    <div class="relative group max-w-sm lg:max-w-full rounded-2xl overflow-hidden border border-[#B08D57]/40 bg-[#FFFCF5] p-4 shadow-xl transition-all duration-500 hover:shadow-2xl hover:scale-[1.01]">
+                        <!-- Gold Framing Corners -->
+                        <div class="absolute top-2 left-2 w-3 h-3 border-t border-l border-[#B08D57]/60"></div>
+                        <div class="absolute top-2 right-2 w-3 h-3 border-t border-r border-[#B08D57]/60"></div>
+                        <div class="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-[#B08D57]/60"></div>
+                        <div class="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#B08D57]/60"></div>
+                        
+                        <!-- Handled Relative Local Media Anchor (Pointed to image asset path) -->
+                        <img src="/uploads/bookshelf-hero.png" alt="Ink & Anchor Shelves" class="w-full h-auto object-cover rounded-xl border border-[#B08D57]/20 shadow-inner">
+                    </div>
+                </div>
+
+            </div>
+
+            <section class="relative z-10 mt-16 overflow-hidden rounded-3xl border border-[#B08D57]/40 bg-gradient-to-br from-[#294536] via-[#3A2922] to-[#6B2737] px-8 py-10 text-[#F3EBDD] shadow-xl md:mt-24 md:px-14 md:py-12" aria-labelledby="reading-invitation">
+                <div class="pointer-events-none absolute -right-16 -top-24 h-72 w-72 rounded-full bg-[#D4B77A]/15 blur-3xl"></div>
+                <div class="relative grid items-center gap-10 md:grid-cols-2">
+                    <div class="text-center md:text-left">
+                        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-[#D4B77A]">A little reading magic</p>
+                        <h2 id="reading-invitation" class="display mt-4 text-4xl font-medium leading-tight md:text-5xl">Find a story<br><span class="italic text-[#E7C98A]">that stays with you.</span></h2>
+                        <p class="mx-auto mt-4 max-w-md text-sm leading-7 text-[#F3EBDD]/75 md:mx-0">Take a moment, wander through the shelves, and see where your next favorite book takes you.</p>
+                        <a href="/books" class="mt-7 inline-flex items-center gap-3 rounded-xl bg-[#D4B77A] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-[#2C2725] transition duration-300 hover:-translate-y-1 hover:bg-[#F3EBDD]">
+                            Find your next read <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+
+                    <div class="relative mx-auto flex h-52 w-full max-w-sm items-center justify-center" aria-hidden="true">
+                        <span class="reading-sparkle absolute left-12 top-5 text-2xl text-[#E7C98A]">✦</span>
+                        <span class="reading-sparkle absolute right-10 top-12 text-lg text-[#F3EBDD] [animation-delay:0.7s]">✧</span>
+                        <span class="reading-sparkle absolute bottom-5 left-1/3 text-lg text-[#D4B77A] [animation-delay:1.2s]">✦</span>
+                        <div class="floating-book absolute left-[17%] top-12 flex h-32 w-20 items-center justify-center rounded-r-lg border-l-4 border-[#E7C98A] bg-gradient-to-br from-[#8C6046] to-[#6B2737] shadow-xl [--book-rotation:-14deg]" style="--book-rotation:-14deg; animation-delay:0.2s">
+                            <span class="display text-center text-sm italic text-[#F3EBDD]">wonder<br>&amp; words</span>
+                        </div>
+                        <div class="floating-book relative z-10 flex h-40 w-24 items-center justify-center rounded-r-lg border-l-4 border-[#D4B77A] bg-gradient-to-br from-[#789165] to-[#294536] shadow-2xl [--book-rotation:0deg]" style="--book-rotation:0deg">
+                            <span class="display text-center text-lg italic text-[#F3EBDD]">your next<br>chapter</span>
+                        </div>
+                        <div class="floating-book absolute right-[16%] top-14 flex h-32 w-20 items-center justify-center rounded-r-lg border-l-4 border-[#D4B77A] bg-gradient-to-br from-[#B08D57] to-[#8C6046] shadow-xl [--book-rotation:14deg]" style="--book-rotation:14deg; animation-delay:0.5s">
+                            <span class="display text-center text-sm italic text-[#F3EBDD]">quiet<br>adventures</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <%- include('includes/footer.ejs') %>
+</body>
+</html>

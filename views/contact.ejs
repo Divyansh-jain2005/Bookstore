@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Ink & Anchor</title>
+   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .display { font-family: 'Cormorant Garamond', serif; }
+    </style>
+</head>
+<body class="bg-[#F3EBDD] text-[#1E1A18]">
+    <%- include('includes/nav.ejs') %>
+
+    <section class="px-6 py-16">
+        <div class="max-w-5xl mx-auto bg-[#FFFCF5]/70 border border-[#B08D57]/40 rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-5">
+            
+            <!-- Left Side: Expanded Storefront Registry Details with Font Awesome Icons -->
+            <div class="md:col-span-2 bg-[#294536] text-[#F3EBDD] p-8 md:p-10 flex flex-col justify-between border-r border-[#B08D57]/20">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.35em] text-[#D4B77A] font-medium">Storefront Registry</p>
+                    <h2 class="display text-5xl mt-4 leading-none font-semibold">Let's connect</h2>
+                    <p class="text-sm mt-4 text-[#F3EBDD]/70 leading-relaxed">Have a question about our books, specific order items, or looking for a clean escape? Write to us.</p>
+                    
+                    <!-- Information Blocks Matrix -->
+                    <div class="mt-10 space-y-6 text-xs tracking-wide">
+                        <!-- Location Block -->
+                        <div class="flex items-start gap-4">
+                            <span class="w-5 text-center text-[#D4B77A] text-sm mt-0.5">
+                                <i class="fa-solid fa-map-pin"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-bold uppercase tracking-wider text-[#D4B77A] mb-1">The Sanctuary Harbor</h4>
+                                <p class="text-[#F3EBDD]/80 leading-relaxed">Adarsh Nagar, Ajmer,<br>Rajasthan, India</p>
+                            </div>
+                        </div>
+
+                        <!-- Operations Block -->
+                        <div class="flex items-start gap-4">
+                            <span class="w-5 text-center text-[#D4B77A] text-sm mt-0.5">
+                                <i class="fa-solid fa-clock"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-bold uppercase tracking-wider text-[#D4B77A] mb-1">Curation Hours</h4>
+                                <p class="text-[#F3EBDD]/80 leading-relaxed">Monday – Saturday • 10:00 AM – 08:00 PM</p>
+                                <p class="text-[10px] text-[#D4B77A]/70 italic mt-0.5">Sundays reserved for quiet reading</p>
+                            </div>
+                        </div>
+
+                        <!-- Direct Strings Block -->
+                        <div class="flex items-start gap-4">
+                            <span class="w-5 text-center text-[#D4B77A] text-sm mt-0.5">
+                                <i class="fa-solid fa-phone"></i>
+                            </span>
+                            <div>
+                                <h4 class="font-bold uppercase tracking-wider text-[#D4B77A] mb-1">Direct Lines</h4>
+                                <p class="text-[#F3EBDD]/80">hello@inkandanchor.com</p>
+                                <p class="text-[#F3EBDD]/80 mt-0.5">+91 145 294 8743</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12 border-t border-[#F3EBDD]/10 pt-4">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-[#F3EBDD]/50">Ink & Anchor Bookstore · Open Sanctuary</p>
+                </div>
+            </div>
+
+            <!-- Right Side: Interactive Request Form Module -->
+            <div class="md:col-span-3 p-8 md:p-10 bg-white/40">
+                <form id="contact-form" action="/contact" method="POST" class="space-y-6">
+                    <% if (contactSent) { %>
+                        <p role="status" class="rounded-xl border border-green-700/30 bg-green-50 px-4 py-3 text-sm text-green-900">Your message was sent. We will reach out shortly.</p>
+                    <% } %>
+                    <% if (contactError) { %>
+                        <p role="alert" class="rounded-xl border border-red-700/30 bg-red-50 px-4 py-3 text-sm text-red-900"><%= contactError %></p>
+                    <% } %>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#3A2922]/75 mb-2">Your Name</label>
+                        <input type="text" name="name" id="user_name" required class="w-full rounded-xl border border-[#B08D57]/45 bg-white/70 px-4 py-3 text-sm outline-none focus:border-[#6B2737]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#3A2922]/75 mb-2">Email Address</label>
+                        <input type="email" name="email" id="user_email" required class="w-full rounded-xl border border-[#B08D57]/45 bg-white/70 px-4 py-3 text-sm outline-none focus:border-[#6B2737]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#3A2922]/75 mb-2">Mobile Number</label>
+                        <input type="tel" name="mobile" id="user_mobile" required class="w-full rounded-xl border border-[#B08D57]/45 bg-white/70 px-4 py-3 text-sm outline-none focus:border-[#6B2737]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-[0.18em] text-[#3A2922]/75 mb-2">Your Message</label>
+                        <textarea name="message" id="message" rows="4" required class="w-full rounded-xl border border-[#B08D57]/45 bg-white/70 px-4 py-3 text-sm outline-none focus:border-[#6B2737] resize-none"></textarea>
+                    </div>
+                    <button type="submit" id="submit-btn" class="w-full bg-[#6B2737] text-[#F3EBDD] py-4 text-xs font-bold uppercase tracking-[0.22em] transition hover:bg-[#3A2922] cursor-pointer rounded-xl shadow-md">
+                        Send Message →
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <%- include('includes/footer.ejs') %>
+
+</body>
+</html>
