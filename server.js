@@ -28,14 +28,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const configuredMongoUri = process.env.MONGODB_URI?.trim();
-const mongoUri = configuredMongoUri || 'mongodb://localhost:27017/bookstore';
-if (process.env.NODE_ENV === 'production' && !configuredMongoUri) {
-    throw new Error('MONGODB_URI must be configured in production.');
-}
-if (!/^mongodb(?:\+srv)?:\/\//i.test(mongoUri)) {
-    throw new Error('MONGODB_URI must start with mongodb:// or mongodb+srv://.');
-}
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/bookstore';
 const adminUsername = process.env.ADMIN_USERNAME || 'admin';
 const adminPassword = process.env.ADMIN_PASSWORD || '1234';
 const adminSessionSecret = process.env.ADMIN_SESSION_SECRET || crypto.randomBytes(32).toString('hex');
@@ -58,6 +51,10 @@ async function connectDatabase() {
     await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB');
 }
+
+connectDatabase().catch((err) => {
+    console.error('MongoDB connection error:', err.message);
+});
 
 const bookSchema = new mongoose.Schema({
     title: String,
@@ -407,14 +404,6 @@ app.post('/books/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
-async function startServer() {
-    await connectDatabase();
-    app.listen(port, () => {
-        console.log(`Example app listening on port ${port}`);
-    });
-}
-
-startServer().catch((err) => {
-    console.error('Application startup failed:', err.message);
-    process.exit(1);
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
 });
